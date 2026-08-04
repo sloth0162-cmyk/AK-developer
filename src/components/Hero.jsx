@@ -1,4 +1,4 @@
-import Akcard from "../assets/images/AKcard.png";
+import Akcard from "../assets/images/Akcard.png";
 import { Search } from "./Search";
 import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
 import { whatsappLink, callLink } from "../utils/contact";
