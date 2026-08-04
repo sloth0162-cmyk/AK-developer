@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",      // project root
+    "paths": {
+      "@/*": ["src/*"]   // match what vite uses
+    }
+  },
+  "include": ["src/**/*"]
+}
