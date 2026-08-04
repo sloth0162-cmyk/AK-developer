@@ -1,4 +1,4 @@
-import AKcard from "../assets/images/AKcard.png";
+import Akcard from "../assets/images/AKcard.png";
 import { Search } from "./Search";
 import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
 import { whatsappLink, callLink } from "../utils/contact";
@@ -79,7 +79,7 @@ export const Hero = () => {
           <div className="lg:col-span-5 flex justify-center items-center">
             <div className="relative overflow-hidden rounded-2xl border border-gray-300 shadow-lg bg-white p-2 w-full max-w-md">
               <img
-                src={AKcard}
+                src={Akcard}
                 alt="Find Properties"
                 className="h-72 w-full object-cover rounded-xl transform hover:scale-102 transition-transform duration-300"
               />
@@ -116,7 +116,7 @@ export const Hero = () => {
         {/* Hero Image */}
         <div className="flex justify-center my-3">
           <img
-            src={AKcard}
+            src={Akcard}
             alt="Hero Logo"
             className="w-full max-h-56 object-cover rounded-xl shadow-md border border-gray-200"
           />

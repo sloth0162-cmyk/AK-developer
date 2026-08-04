@@ -18,7 +18,7 @@ const properties = [
     ],
     connectivity: "Direct Airport Access",
     summary: "Strategic logistics hub — ideal for long-term investors.",
-    image: shadnagar
+    image: Shadnagar
   },
   {
     name: "Shamshabad",
