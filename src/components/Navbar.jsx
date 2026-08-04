@@ -4,7 +4,7 @@ import AK from "../assets/images/AK.png";
 import { useNavigate } from "react-router-dom";
 import { IoMdNotifications, IoMdHome, IoMdInformationCircle } from "react-icons/io";
 import "./component.css";
-import Login from "../pages/auth/Login";
+
 
 function Profileview({ setOpenProfile }) {
     return (
@@ -19,7 +19,7 @@ function Profileview({ setOpenProfile }) {
                 onClick={() => setOpenProfile(false)}
                 className="px-5 py-3 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer text-sm font-semibold text-gray-700 border-t border-gray-50 flex items-center"
             >
-                <Login />
+                
             </li>
             <li
                 onClick={() => setOpenProfile(false)}

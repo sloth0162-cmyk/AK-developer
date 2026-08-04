@@ -14,7 +14,7 @@ export const Hero = () => {
       <div className="hidden md:block px-10 py-12 m-6 rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 shadow-sm">
         {/* Main Header Banner */}
         <h1 className="text-center text-4xl font-extrabold tracking-tight mb-10 text-gray-900">
-          Welcome to <span className="text-blue-600">EaseBuild</span> —{" "}
+          Welcome to <span className="text-blue-600">Ak Developer</span> —{" "}
           <span className="italic font-semibold text-gray-700">
             Your Gateway to Smart Properties
           </span>
@@ -117,7 +117,7 @@ export const Hero = () => {
         {/* Hero Image */}
         <div className="flex justify-center my-3">
           <img
-            src={Herologo}
+            src={AKcard}
             alt="Hero Logo"
             className="w-full max-h-56 object-cover rounded-xl shadow-md border border-gray-200"
           />
