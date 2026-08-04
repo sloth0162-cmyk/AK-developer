@@ -1,4 +1,3 @@
-import Herologo from "../assets/images/Herologo.jpg";
 import AKcard from "../assets/images/AKcard.png";
 import { Search } from "./Search";
 import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
