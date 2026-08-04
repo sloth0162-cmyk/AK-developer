@@ -1,7 +1,7 @@
 // src/data/data.js
 import img1 from "../assets/images/img1.png";
 import img2 from "../assets/images/img2.png";
-import shadnagar from "../assets/images/shadnagar.jpg";
+import Shadnagar from "../assets/images/shadnagar.jpg";
 import shamshabad from "../assets/images/shamshabad.jpg";
 import Tukkuguda from "../assets/images/Tukkuguda.jpg";
 import Srisailam from "../assets/images/Srisailam.jpg";
