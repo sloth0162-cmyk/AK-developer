@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
-import { About } from './pages/About'
+import  About  from './pages/About'
 import BlogPage from './pages/Blogpage'
+import Blogs from './pages/blogs'
 
 
 function App() {
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path="/blogs" element={<BlogPage />} />
+        <Route path="/blogpage" element={<BlogPage />} />
+        <Route path="/blogs/:area" element={<Blogs/>} />
      
       </Routes>
     </BrowserRouter>

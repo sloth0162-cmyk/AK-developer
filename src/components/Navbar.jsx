@@ -153,8 +153,8 @@ function Navbar({ user }) {
             onClick={() => navigate(path)}
             className={`relative cursor-pointer font-medium text-sm lg:text-base transition-colors after:content-[''] after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300
             ${isActive(path)
-                ? "text-blue-600 after:w-full"
-                : "text-gray-600 hover:text-blue-600 after:w-0 hover:after:w-full"}`}
+                    ? "text-blue-600 after:w-full"
+                    : "text-gray-600 hover:text-blue-600 after:w-0 hover:after:w-full"}`}
         >
             {label}
         </li>
@@ -178,8 +178,8 @@ function Navbar({ user }) {
             <header
                 className={`hidden md:block sticky top-0 z-50 border-b transition-all duration-300
                 ${scrolled
-                    ? "bg-white/90 backdrop-blur-lg shadow-md border-gray-200"
-                    : "bg-white/70 backdrop-blur-md shadow-sm border-gray-100"}`}
+                        ? "bg-gray-100 backdrop-blur-lg shadow-md border-gray-200"
+                        : "bg-white/70 backdrop-blur-md shadow-sm border-gray-100"}`}
             >
                 <nav className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 lg:px-8 py-2 md:py-3">
                     {/* Logo */}
@@ -194,11 +194,15 @@ function Navbar({ user }) {
                         />
                     </div>
 
+                
+
                     {/* Links */}
                     <ul className="flex items-center gap-5 md:gap-6 lg:gap-8">
                         <NavLink path="/" label="Home" />
                         <NavLink path="/about" label="About" />
 
+                            </ul>
+                            <ul className="flex items-center gap-6 md:gap-8">
                         <li className="relative">
                             <IoMdNotifications className="text-xl md:text-2xl text-gray-600 cursor-pointer hover:text-blue-600 transition-all duration-200 hover:scale-110" />
                             <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full" />

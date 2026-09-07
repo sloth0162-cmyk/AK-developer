@@ -49,16 +49,16 @@ export const Hero = () => {
             {/* Headline */}
             <h1 className="text-3xl lg:text-4xl xl:text-[2.75rem] font-extrabold tracking-tight text-gray-900 leading-tight">
               Own Verified Open Plots in{" "}
-              <span className="text-blue-600">Hyderabad</span> — Not Just a Booking Slip
+              <span className="text-blue-600">Hyderabad</span>  Not Just a Booking Slip
             </h1>
 
             {/* Subtitle */}
             <p className="text-base lg:text-lg text-gray-600 leading-relaxed max-w-xl">
-              Every plot we list is <span className="font-semibold text-gray-800">RERA-approved and title-verified</span> before it reaches you — so you invest with proof, not promises.
+              Every plot we list is <span className="font-semibold text-gray-800">RERA-approved and title-verified</span> before it reaches you  so you invest with proof, not promises.
             </p>
 
             {/* Search */}
-            <div className="w-full my-1">
+            <div className="w-3/4 my-1">
               <Search />
               <p className="text-xs text-gray-500 mt-2">
                 Search by area, budget, or property type
@@ -156,8 +156,10 @@ export const Hero = () => {
 
         {/* Search */}
         <div>
-          <Search />
-          <p className="text-xs text-gray-500 mt-2">
+          <Search
+          className="w-1/4 my-1"
+          />
+          <p className="text-xs text-gray-500 mt-2 ">
             Search by area, budget, or property type
           </p>
         </div>

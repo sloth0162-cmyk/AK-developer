@@ -18,7 +18,7 @@ const Footer = () => {
         {/* TOP: brand title */}
         <div className="border-b border-gray-200 pb-6 mb-8 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
           <p className="text-3xl sm:text-4xl font-bold text-blue-600 tracking-tight">
-            EaseBuild
+            Ak Developer
           </p>
           <span className="text-gray-500 text-sm sm:text-base">
             Verified open plots &amp; commercial properties in Hyderabad
@@ -31,7 +31,7 @@ const Footer = () => {
           {/* BRAND BLURB */}
           <div>
             <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-sm">
-              <span className="text-blue-600 font-semibold">EaseBuild</span>{" "}
+              <span className="text-blue-600 font-semibold">Ak Developer</span>{" "}
               helps you find verified open plots and commercial properties in
               Hyderabad, with complete assistance through to registration.
             </p>
@@ -84,7 +84,7 @@ const Footer = () => {
 
         {/* BOTTOM BAR */}
         <div className="border-t border-gray-200 mt-10 pt-5 text-center text-xs sm:text-sm text-gray-500">
-          © {year} EaseBuild. All rights reserved.
+          © {year} Ak Developer. All rights reserved.
         </div>
 
       </div>

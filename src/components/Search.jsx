@@ -7,7 +7,7 @@ export const Search = () => {
         <input
           type="text"
           placeholder="Search plots or commercial sites in Hyderabad"
-          className="flex-1 px-4 py-2 outline-none text-sm md:text-bas hover:text-blue-500 transition-all"
+          className="flex-1 px-4 py-2 outline-none text-sm md:text-base hover:text-blue-500 transition-all "
         />
 
         <button

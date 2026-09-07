@@ -6,7 +6,9 @@ function BlogPage() {
   return (
     <div>
       <Navbar/>
-     <BlogCard key={blogs.id} blog = {blogs[0]}/>
+     {blogs.map((blog) => (
+       <BlogCard key={blog.id} blog={blog} />
+     ))}
      <Footer/>
     </div>
   );
