@@ -35,7 +35,8 @@ const properties = [
     image: shamshabad
   },
   {
-    name: "Srisailm",
+    name: "Kothur",
+    area: "Kothur",
     highway: "NH44",
     growth: "20–30%",
     highlights: [
@@ -48,7 +49,8 @@ const properties = [
     image: Srisailam
   },
   {
-    name: "Tukkuguda",
+    name: "Kokapet",
+    area: "Kokapet",
     location: "Along ORR & Srisailam Highway",
     returns: "15–25%",
     highlights: [

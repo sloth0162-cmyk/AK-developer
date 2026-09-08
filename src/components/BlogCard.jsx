@@ -77,6 +77,7 @@ function BlogCard({ blog }) {
         </div>
       </div>
     </article>
+
   );
 }
 
