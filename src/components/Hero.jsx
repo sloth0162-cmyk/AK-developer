@@ -19,7 +19,7 @@ const trustBadges = [
   { icon: MdOutlineGpsFixed, label: "Site Visit Guaranteed" },
 ];
 
-export const Hero = () => {
+export const Hero = ({ onSearch }) => {
   const navigate = useNavigate();
 
   return (
@@ -59,7 +59,7 @@ export const Hero = () => {
 
             {/* Search */}
             <div className="w-3/4 my-1">
-              <Search />
+         <Search onSearch={onSearch} />
               <p className="text-xs text-gray-500 mt-2">
                 Search by area, budget, or property type
               </p>
@@ -156,9 +156,7 @@ export const Hero = () => {
 
         {/* Search */}
         <div>
-          <Search
-          className="w-1/4 my-1"
-          />
+         <Search onSearch={onSearch} />
           <p className="text-xs text-gray-500 mt-2 ">
             Search by area, budget, or property type
           </p>
