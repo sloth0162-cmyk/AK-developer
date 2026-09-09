@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import AK from "../assets/images/AK.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import { createClient } from "../lib/client";
+
+const supabase = createClient();
 import {
     IoMdNotifications,
     IoMdHome,
@@ -15,7 +18,7 @@ import {
 import "./component.css";
 
 /* ================= PROFILE DROPDOWN ================= */
-function Profileview({ open, setOpenProfile, user }) {
+function Profileview({ open, setOpenProfile, user, onLogin, onLogout }) {
     const navigate = useNavigate();
     const isSignedIn = Boolean(user);
 
@@ -23,6 +26,10 @@ function Profileview({ open, setOpenProfile, user }) {
         setOpenProfile(false);
         navigate(path);
     };
+
+    const displayName =
+        user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email;
+    const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
 
     return (
         <div
@@ -33,12 +40,20 @@ function Profileview({ open, setOpenProfile, user }) {
                 <>
                     {/* Header */}
                     <div className="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
-                        <div className="h-11 w-11 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center text-white font-semibold text-lg shrink-0">
-                            {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                        </div>
+                        {avatarUrl ? (
+                            <img
+                                src={avatarUrl}
+                                alt={displayName}
+                                className="h-11 w-11 rounded-full border-2 border-white/40 object-cover shrink-0"
+                            />
+                        ) : (
+                            <div className="h-11 w-11 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center text-white font-semibold text-lg shrink-0">
+                                {displayName ? displayName.charAt(0).toUpperCase() : "U"}
+                            </div>
+                        )}
                         <div className="min-w-0">
                             <p className="text-white font-semibold text-sm truncate">
-                                {user.name || "Account"}
+                                {displayName || "Account"}
                             </p>
                             <p className="text-blue-100 text-xs truncate">
                                 {user.email}
@@ -73,7 +88,7 @@ function Profileview({ open, setOpenProfile, user }) {
                         <li
                             onClick={() => {
                                 setOpenProfile(false);
-                                // call your actual logout handler here
+                                onLogout();
                             }}
                             className="group flex items-center gap-3 px-5 py-3 hover:bg-red-50 cursor-pointer transition-colors"
                         >
@@ -98,18 +113,14 @@ function Profileview({ open, setOpenProfile, user }) {
                     {/* Auth actions */}
                     <div className="p-3 flex flex-col gap-2">
                         <button
-                            onClick={() => goTo("/login")}
+                            onClick={() => {
+                                setOpenProfile(false);
+                                onLogin();
+                            }}
                             className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
                         >
                             <IoMdLogIn className="text-lg" />
-                            Sign In
-                        </button>
-                        <button
-                            onClick={() => goTo("/signup")}
-                            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors"
-                        >
-                            <IoMdPersonAdd className="text-lg" />
-                            Create Account
+                            Sign in with Google
                         </button>
                     </div>
                 </>
@@ -119,14 +130,39 @@ function Profileview({ open, setOpenProfile, user }) {
 }
 
 /* ================= NAVBAR ================= */
-function Navbar({ user }) {
+function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
     const [openProfile, setOpenProfile] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loadingAuth, setLoadingAuth] = useState(true);
     const desktopProfileRef = useRef(null);
     const mobileProfileRef = useRef(null);
     const isSignedIn = Boolean(user);
+
+    // Load current session + subscribe to auth changes
+    useEffect(() => {
+        let mounted = true;
+
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (mounted) {
+                setUser(session?.user ?? null);
+                setLoadingAuth(false);
+            }
+        });
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => {
+            mounted = false;
+            subscription.unsubscribe();
+        };
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -148,6 +184,21 @@ function Navbar({ user }) {
 
     const isActive = (path) => location.pathname === path;
 
+    const handleGoogleLogin = async () => {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+                redirectTo: `${window.location.origin}${location.pathname}`,
+            },
+        });
+        if (error) console.error("Google sign-in error:", error.message);
+    };
+
+    const handleLogout = async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) console.error("Sign-out error:", error.message);
+    };
+
     const NavLink = ({ path, label }) => (
         <li
             onClick={() => navigate(path)}
@@ -161,16 +212,31 @@ function Navbar({ user }) {
     );
 
     // Shared avatar so desktop/mobile stay in sync
-    const Avatar = ({ size = "h-9 w-9 md:h-10 md:w-10" }) =>
-        isSignedIn ? (
+    const Avatar = ({ size = "h-9 w-9 md:h-10 md:w-10" }) => {
+        const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+        const displayName =
+            user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email;
+
+        if (isSignedIn && avatarUrl) {
+            return (
+                <img
+                    src={avatarUrl}
+                    alt={displayName}
+                    className={`${size} rounded-full object-cover shadow-md cursor-pointer ring-2 ring-transparent group-hover:ring-blue-200 transition-all duration-200`}
+                />
+            );
+        }
+
+        return isSignedIn ? (
             <div className={`${size} rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-md cursor-pointer ring-2 ring-transparent group-hover:ring-blue-200 transition-all duration-200 flex items-center justify-center text-white text-sm font-semibold`}>
-                {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                {displayName ? displayName.charAt(0).toUpperCase() : "U"}
             </div>
         ) : (
             <div className={`${size} rounded-full bg-gray-100 border border-gray-200 shadow-sm cursor-pointer flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-colors duration-200`}>
                 <IoMdPerson className="text-lg" />
             </div>
         );
+    };
 
     return (
         <>
@@ -194,15 +260,12 @@ function Navbar({ user }) {
                         />
                     </div>
 
-                
-
                     {/* Links */}
                     <ul className="flex items-center gap-5 md:gap-6 lg:gap-8">
                         <NavLink path="/" label="Home" />
                         <NavLink path="/about" label="About" />
-
-                            </ul>
-                            <ul className="flex items-center gap-6 md:gap-8">
+                    </ul>
+                    <ul className="flex items-center gap-6 md:gap-8">
                         <li className="relative">
                             <IoMdNotifications className="text-xl md:text-2xl text-gray-600 cursor-pointer hover:text-blue-600 transition-all duration-200 hover:scale-110" />
                             <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full" />
@@ -213,13 +276,20 @@ function Navbar({ user }) {
                             <button
                                 className="flex items-center gap-1.5 group"
                                 onClick={() => setOpenProfile((p) => !p)}
+                                disabled={loadingAuth}
                             >
                                 <Avatar />
                                 <IoMdArrowDropdown
                                     className={`text-gray-500 transition-transform duration-200 ${openProfile ? "rotate-180" : ""}`}
                                 />
                             </button>
-                            <Profileview open={openProfile} setOpenProfile={setOpenProfile} user={user} />
+                            <Profileview
+                                open={openProfile}
+                                setOpenProfile={setOpenProfile}
+                                user={user}
+                                onLogin={handleGoogleLogin}
+                                onLogout={handleLogout}
+                            />
                         </li>
                     </ul>
                 </nav>
@@ -253,7 +323,13 @@ function Navbar({ user }) {
                         >
                             <Avatar size="h-9 w-9 sm:h-10 sm:w-10" />
                         </div>
-                        <Profileview open={openProfile} setOpenProfile={setOpenProfile} user={user} />
+                        <Profileview
+                            open={openProfile}
+                            setOpenProfile={setOpenProfile}
+                            user={user}
+                            onLogin={handleGoogleLogin}
+                            onLogout={handleLogout}
+                        />
                     </div>
                 </nav>
             </header>

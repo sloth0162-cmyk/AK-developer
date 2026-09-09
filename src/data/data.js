@@ -5,6 +5,8 @@ import Shadnagar from "../assets/images/Shadnagar.jpg";
 import shamshabad from "../assets/images/shamshabad.jpg";
 import Tukkuguda from "../assets/images/Tukkuguda.jpg";
 import Srisailam from "../assets/images/Srisailam.jpg";
+import kokapet from "../assets/images/kokapet.png"
+import kothur from "../assets/images/kothur.png"
 const properties = [
   {
     name: "Shadnagar",
@@ -46,7 +48,7 @@ const properties = [
     ],
     connectivity: "Direct Airport Access",
     summary: "Strategic logistics hub — ideal for long-term investors.",
-    image: Srisailam
+    image: kothur
   },
   {
     name: "Kokapet",
@@ -59,7 +61,7 @@ const properties = [
       "Full Road Access"
     ],
     summary: "Rapidly growing industrial and residential zone with huge appreciation potential.",
-    image: Tukkuguda
+    image: kokapet
   },
   // ... rest of the data
 ];

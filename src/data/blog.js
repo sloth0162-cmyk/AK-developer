@@ -1,6 +1,6 @@
 import Shadnagar from "../assets/images/Shadnagar.jpg"
-import kokapet from "../assets/images/kokapet.jpg"
-import kothur from "../assets/images/kothur.jpg"
+import kokapet from "../assets/images/kokapet.png"
+import kothur from "../assets/images/kothur.png"
 
 export const blogs = [
   {
