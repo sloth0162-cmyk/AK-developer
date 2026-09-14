@@ -95,8 +95,8 @@ function PropertyCard() {
           {/* Footer */}
           <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100 bg-gray-50/50">
             <div className="flex gap-4 text-xs font-medium text-gray-500">
-              <span>❤️ {property.likes || 0}</span>
-              <span>👁️ {property.views || 0}</span>
+              {/* <span>❤️ {property.likes || 0}</span>
+              <span>👁️ {property.views || 0}</span> */}
             </div>
 
             <Link

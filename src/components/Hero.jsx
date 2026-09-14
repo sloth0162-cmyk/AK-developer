@@ -7,10 +7,9 @@ import { whatsappLink, callLink } from "../utils/contact";
 import { useNavigate } from "react-router-dom";
 
 const stats = [
-  { value: "500+", label: "Plots Delivered" },
+  { value: "100+", label: "Plots Delivered" },
   { value: "10+ Yrs", label: "In Hyderabad" },
-  { value: "1200+", label: "Happy Families" },
-  { value: "0", label: "Legal Disputes" },
+  { value: "500+", label: "Happy Families" },
 ];
 
 const trustBadges = [
@@ -40,7 +39,7 @@ export const Hero = ({ onSearch }) => {
                   <div key={i} className="h-6 w-6 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 border-2 border-white" />
                 ))}
               </div>
-              <span className="text-xs font-semibold text-gray-700">1200+ families trust us</span>
+              <span className="text-xs font-semibold text-gray-700">500+ families trust us</span>
               <div className="flex items-center gap-0.5 text-amber-400 text-xs">
                 <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
               </div>
@@ -111,10 +110,7 @@ export const Hero = ({ onSearch }) => {
                 alt="Verified Hyderabad plots by AK Developer"
                 className="h-72 w-full object-cover rounded-xl transform group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur shadow-md">
-                <MdVerified className="text-green-600 text-sm" />
-                <span className="text-xs font-semibold text-gray-800">Title Verified</span>
-              </div>
+
             </div>
 
             {/* Stats grid */}

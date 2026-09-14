@@ -6,6 +6,7 @@ import ShowResults from "../components/ShowResults";
 import Footer from "../components/Footer";
 import { Hero } from "../components/Hero";
 import Navbar from "../components/Navbar";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const supabase = createClient();
 
@@ -51,6 +52,7 @@ export const Home = () => {
 
   return (
     <>
+    <LoadingAnimation/>
       <Navbar />
 
       <Hero onSearch={handleSearch} />
