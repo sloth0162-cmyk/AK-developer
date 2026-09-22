@@ -68,7 +68,7 @@ export const Hero = ({ onSearch }) => {
             <div className="flex flex-wrap items-center gap-3 lg:gap-4 pt-1">
               <button
                 className="px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-                onClick={() => navigate("/blogpage")}
+                onClick={() => navigate("/property")}
               >
                 Explore Verified Plots
               </button>

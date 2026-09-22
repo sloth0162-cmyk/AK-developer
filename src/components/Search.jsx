@@ -7,33 +7,38 @@ export const Search = ({ onSearch }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const query = search.trim();
-
-    if (!query) return;
-
-    onSearch(query);
+    // Don't block empty searches.
+    // Empty search means "show all blogs".
+    onSearch(search.trim());
   };
 
   return (
     <div className="w-full">
       <form
         onSubmit={handleSubmit}
-        className="flex items-center w-full bg-white border border-gray-300
-                   rounded-md overflow-hidden shadow-sm"
+        className="flex w-full items-center overflow-hidden rounded-xl
+                   border border-gray-200 bg-white shadow-sm
+                   transition-all duration-200
+                   focus-within:border-blue-400
+                   focus-within:ring-4 focus-within:ring-blue-50"
       >
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search plots or commercial sites in Hyderabad"
-          className="flex-1 min-w-0 px-4 py-2 outline-none text-sm
-                     md:text-base text-gray-900"
+          className="min-w-0 flex-1 bg-transparent px-4 py-3
+                     text-sm text-gray-900 outline-none
+                     placeholder:text-gray-400 md:text-base"
         />
 
         <button
           type="submit"
-          className="shrink-0 px-4 py-2 bg-black text-white
-                     hover:bg-gray-800 transition cursor-pointer rounded-2xl"
+          className="mr-1.5 flex h-10 w-10 shrink-0 items-center
+                     justify-center rounded-lg bg-blue-600 text-white
+                     transition-all duration-200
+                     hover:bg-blue-700
+                     active:scale-95"
         >
           <BiSearch className="text-xl" />
         </button>

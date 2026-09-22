@@ -6,9 +6,9 @@ const Footer = () => {
 
   const links = [
     { label: "Home", href: "/" },
-    { label: "Properties", href: "/blogpage" },
-    { label: "About Us", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "Properties", href: "/property" },
+    { label: "Blogs", href: "/blogpage" },
+    { label: "Contact", href: "/connect" },
   ];
 
   return (

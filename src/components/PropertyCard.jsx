@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { createClient } from "../lib/client";
 
 const supabase = createClient();
-
 function PropertyCard() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,15 +28,16 @@ function PropertyCard() {
   }, []);
 
   if (loading) {
-    return <p>Loading properties...</p>;
+    return <p className="text-gray-500 text-center">Loading properties...</p>;
   }
+
 
   return (
     <div className="flex overflow-x-auto scroll-smooth gap-6 pb-8 px-4 sm:px-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {properties.map((property) => (
         <div
-          key={property.id}
-          className="snap-start min-w-[320px] bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 border border-gray-100 overflow-hidden group"
+        key={property.id}
+        className="snap-start min-w-[320px] bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-500 border border-gray-100 overflow-hidden group"
         >
           {/* Image */}
           <div className="h-48 overflow-hidden relative">

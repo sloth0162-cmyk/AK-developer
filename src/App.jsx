@@ -3,6 +3,9 @@ import { Home } from './pages/Home'
 import  About  from './pages/About'
 import BlogPage from './pages/Blogpage'
 import Blogs from './pages/blogs'
+import Property from './pages/propery'
+import SiteVisit from './pages/Sitevisit'
+import News from './pages/News'
 
 
 function App() {
@@ -15,7 +18,9 @@ function App() {
         <Route path="/blogpage" element={<BlogPage />} />
         <Route path="/blogs/:area" element={<Blogs />} />
 <Route path="/blog/:id" element={<Blogs />} />
-     
+     <Route path="/property" element ={<Property/>} />
+     <Route path="/connect" element ={<SiteVisit/>} />
+     <Route path="/news" element ={<News/>} />
       </Routes>
     </BrowserRouter>
   </>
