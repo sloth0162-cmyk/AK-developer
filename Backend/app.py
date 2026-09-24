@@ -74,6 +74,36 @@ def generate_news():
             "error": str(exc)
         }), 500
 
+@app.route("/api/news/<news_id>", methods=["GET"])
+def get_news_by_id(news_id):
+    try:
+        response = (
+            supabase
+            .table("news")
+            .select("*")
+            .eq("id", news_id)
+            .single()
+            .execute()
+        )
+
+        if not response.data:
+            return jsonify({
+                "success": False,
+                "error": "News article not found"
+            }), 404
+
+        return jsonify({
+            "success": True,
+            "data": response.data
+        })
+
+    except Exception as e:
+        print("Error fetching news:", e)
+
+        return jsonify({
+            "success": False,
+            "error": "Failed to fetch news article"
+        }), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

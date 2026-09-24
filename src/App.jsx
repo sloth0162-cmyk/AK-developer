@@ -6,7 +6,7 @@ import Blogs from './pages/blogs'
 import Property from './pages/propery'
 import SiteVisit from './pages/Sitevisit'
 import News from './pages/News'
-
+import NewsArticle from "./pages/NewsArticle";
 
 function App() {
 
@@ -22,6 +22,7 @@ function App() {
      <Route path="/property" element ={<Property/>} />
      <Route path="/connect" element ={<SiteVisit/>} />
      <Route path="/news" element ={<News/>} />
+     <Route path="/news/:id" element={<NewsArticle />} />
       </Routes>
 
   </>
