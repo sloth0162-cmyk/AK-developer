@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createClient } from "../lib/client";
 
+import { useNavigate } from "react-router-dom";
 const supabase = createClient();
 function PropertyCard() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProperties() {
@@ -93,19 +95,28 @@ function PropertyCard() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100 bg-gray-50/50">
-            <div className="flex gap-4 text-xs font-medium text-gray-500">
-              {/* <span>❤️ {property.likes || 0}</span>
-              <span>👁️ {property.views || 0}</span> */}
-            </div>
+         {/* Footer */}
+<div className="flex items-center justify-between gap-2 px-5 py-4 border-t border-gray-100 bg-gray-50/50">
 
-            <Link
-              to={`/blogs/${property.area}`}
-              className="text-sm font-bold text-blue-600 group-hover:bg-blue-600 group-hover:text-white px-4 py-1.5 rounded-full transition-colors duration-300 cursor-pointer"
-            >
-              View Details
-            </Link>
-          </div>
+  <button
+    onClick={() =>
+      navigate("/connect", {
+        state: { area: property.area },
+      })
+    }
+    className="text-sm font-bold text-emerald-600 border border-emerald-600 hover:bg-emerald-600 hover:text-white px-4 py-2 rounded-full transition-colors duration-300 cursor-pointer"
+  >
+    Site Visit
+  </button>
+
+  <Link
+    to={`/blogs/${property.area}`}
+    className="text-sm font-bold text-blue-600 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-full transition-colors duration-300"
+  >
+    View Details
+  </Link>
+
+</div>
         </div>
       ))}
     </div>
