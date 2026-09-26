@@ -166,7 +166,7 @@ const PropertyCard = () => {
 
               {/* View More */}
               <Link
-                to={`/blogs/${encodeURIComponent(property.area)}`}
+                to={`/property/${property.id}`}
                 className="group/link flex items-center gap-1.5 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
               >
                 View More
