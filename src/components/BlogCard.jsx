@@ -20,7 +20,7 @@ function BlogCard({ blog }) {
                  lg:flex-row lg:items-stretch
                  motion-safe:animate-in motion-safe:fade-in
                  motion-safe:slide-in-from-bottom-2 motion-safe:duration-500
-                 p-8"
+                 p-8 lg:mr-40 lg:ml-40 lg:mt-5"
     >
       {/* Image */}
       <Link

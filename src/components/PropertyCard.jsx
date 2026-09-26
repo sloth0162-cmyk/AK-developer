@@ -79,7 +79,7 @@ const PropertyCard = () => {
                   <img
                     src={property.image_url}
                     alt={property.area}
-                    onClick={() => navigate(`/blogs/${encodeURIComponent(property.area)}`)}
+                    onClick={() => navigate(`/property/${property.id}`)}
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 cursor-pointer"
                   />
                 ) : (
