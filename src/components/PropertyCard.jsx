@@ -1,361 +1,186 @@
-
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createClient } from "../lib/client";
+import { MapPin, TrendingUp, ArrowRight } from "lucide-react";
 
 const supabase = createClient();
 
-/* ─── Inline SVG Icons ──────────────────────────────────────────── */
-const MapPinIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-3.5 h-3.5"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const TrendingUpIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-3.5 h-3.5"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const RoadIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-3.5 h-3.5"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path d="M3.5 2A1.5 1.5 0 002 3.5v13A1.5 1.5 0 003.5 18h1a.5.5 0 00.49-.41L6.5 9l1.51 8.59A.5.5 0 008.5 18h3a.5.5 0 00.49-.41L13.5 9l1.51 8.59a.5.5 0 00.49.41h1a1.5 1.5 0 001.5-1.5v-13A1.5 1.5 0 0016.5 2h-13z" />
-  </svg>
-);
-
-const ArrowRightIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const ChevronIcon = ({ dir }) => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2.5}
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d={dir === "left" ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
-    />
-  </svg>
-);
-
-/* ─── One-time entrance-animation styles ────────────────────────── */
-const EntranceStyles = () => (
-  <style>{`
-@keyframes cardEnter {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-}
-
-    .card - enter {
-  opacity: 0;
-  animation: cardEnter 1s cubic - bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@media(min - width: 640px) {
-      .card - enter {
-    animation - duration: 2s;
-  }
-}
-
-@media(prefers - reduced - motion: reduce) {
-      .card - enter {
-    animation: none;
-    opacity: 1;
-  }
-}
-`}</style>
-);
-
-/* ─── Single Property Card ──────────────────────────────────────── */
-const SingleCard = ({ property, navigate, delay }) => (
-  <div
-    className="card-enter group snap-start flex-shrink-0 w-[340px] sm:w-[360px] bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col"
-    style={{ animationDelay: `${delay} ms` }}
-  >
-    {/* Image */}
-    <Link
-      to={`/ blogs / ${property.area} `}
-      className="block relative h-52 overflow-hidden bg-gray-100"
-    >
-      {property.image_url ? (
-        <img
-          src={property.image_url}
-          alt={property.name}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-      ) : (
-        <div className="flex h-full items-center justify-center text-sm text-gray-400 bg-gray-50">
-          No image
-        </div>
-      )}
-
-      {property.highway && (
-        <div className="absolute top-3.5 left-3.5 bg-white px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-700 shadow-sm flex items-center gap-1.5">
-          <RoadIcon />
-          <span className="line-clamp-1 max-w-[160px]">
-            {property.highway}
-          </span>
-        </div>
-      )}
-
-      {property.growth && (
-        <div className="absolute top-3.5 right-3.5 bg-emerald-600 px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-white shadow-sm flex items-center gap-1">
-          <TrendingUpIcon />
-          {property.growth}
-        </div>
-      )}
-    </Link>
-
-    {/* Content */}
-    <div className="p-5 flex-1 flex flex-col">
-      <Link to={`/ blogs / ${property.area} `}>
-        <h3 className="text-lg font-bold text-gray-900 group-hover:text-emerald-700 transition-colors duration-300 line-clamp-1 leading-snug">
-          {property.name}
-        </h3>
-      </Link>
-
-      {property.area && (
-        <p className="mt-2 text-sm text-gray-500 flex items-center gap-1.5">
-          <MapPinIcon />
-          <span className="line-clamp-1">
-            {property.area}
-            {property.location ? `, ${property.location} ` : ""}
-          </span>
-        </p>
-      )}
-
-      {(property.growth || property.returns) && (
-        <div className="mt-3 inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-semibold self-start">
-          <TrendingUpIcon />
-          {property.growth
-            ? `${property.growth} Growth`
-            : `${property.returns} Returns`}
-        </div>
-      )}
-
-      {property.highlights?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-3">
-          {property.highlights.slice(0, 3).map((item, idx) => (
-            <span
-              key={idx}
-              className="text-[11px] font-medium bg-gray-50 text-gray-600 px-2.5 py-1 rounded-md border border-gray-100"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      )}
-
-      <div className="flex-1" />
-
-      <div className="flex items-center gap-2.5 mt-5 pt-4 border-t border-gray-100">
-        <button
-          onClick={() =>
-            navigate("/connect", {
-              state: { area: property.area },
-            })
-          }
-          className="flex-1 text-center text-sm font-semibold text-emerald-700 border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 px-3 py-2.5 rounded-xl transition-colors duration-300 cursor-pointer"
-        >
-          Site Visit
-        </button>
-
-        <Link
-          to={`/ blogs / ${property.area} `}
-          className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 px-3 py-2.5 rounded-xl transition-colors duration-300"
-        >
-          View Details
-          <ArrowRightIcon />
-        </Link>
-      </div>
-    </div>
-  </div>
-);
-
-/* ─── Loading skeleton ───────────────────────────────────────────── */
-const CardSkeleton = () => (
-  <div className="snap-start flex-shrink-0 w-[340px] sm:w-[360px] bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
-    <div className="h-52 bg-gray-100" />
-
-    <div className="p-5 space-y-3">
-      <div className="h-5 bg-gray-100 rounded-md w-3/4" />
-      <div className="h-4 bg-gray-50 rounded-md w-1/2" />
-      <div className="h-4 bg-gray-50 rounded-md w-2/3" />
-
-      <div className="flex gap-1.5 mt-3">
-        <div className="h-5 bg-gray-50 rounded w-14" />
-        <div className="h-5 bg-gray-50 rounded w-14" />
-      </div>
-
-      <div className="flex gap-2.5 mt-5 pt-4 border-t border-gray-100">
-        <div className="flex-1 h-10 bg-gray-50 rounded-xl" />
-        <div className="flex-1 h-10 bg-gray-100 rounded-xl" />
-      </div>
-    </div>
-  </div>
-);
-
-/* ═══ PROPERTY CARD (horizontal scroll container) ══════════════ */
-function PropertyCard() {
+const PropertyCard = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
-  const scrollRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
   useEffect(() => {
-    supabase
-      .from("data")
-      .select("*")
-      .order("id", { ascending: true })
-      .then(({ data, error }) => {
-        if (error) {
-          console.error("Error fetching data:", error);
-        } else {
-          setProperties(data);
-        }
+    const fetchProperties = async () => {
+      const { data, error } = await supabase
+        .from("data")
+        .select("*")
+        .limit(4);
 
-        setLoading(false);
-      });
-  }, []);
+      if (error) {
+        console.error("Error fetching properties:", error);
+        setProperties([]);
+      } else {
+        setProperties(data || []);
+      }
 
-  const updateScrollButtons = () => {
-    const el = scrollRef.current;
-
-    if (!el) return;
-
-    setCanScrollLeft(el.scrollLeft > 10);
-    setCanScrollRight(
-      el.scrollLeft + el.clientWidth < el.scrollWidth - 10
-    );
-  };
-
-  useEffect(() => {
-    const el = scrollRef.current;
-
-    if (!el) return;
-
-    updateScrollButtons();
-
-    el.addEventListener("scroll", updateScrollButtons, {
-      passive: true,
-    });
-
-    window.addEventListener("resize", updateScrollButtons);
-
-    return () => {
-      el.removeEventListener("scroll", updateScrollButtons);
-      window.removeEventListener("resize", updateScrollButtons);
+      setLoading(false);
     };
-  }, [properties]);
 
-  const scroll = (direction) => {
-    scrollRef.current?.scrollBy({
-      left: direction === "right" ? 380 : -380,
-      behavior: "smooth",
-    });
-  };
+    fetchProperties();
+  }, []);
 
   if (loading) {
     return (
-      <div className="flex gap-5 pb-6 px-4 sm:px-6 overflow-hidden">
-        {[...Array(4)].map((_, i) => (
-          <CardSkeleton key={i} />
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((item) => (
+          <div
+            key={item}
+            className="h-[520px] animate-pulse rounded-2xl bg-gray-100"
+          />
         ))}
       </div>
     );
   }
 
-  if (!properties?.length) {
+  if (properties.length === 0) {
     return (
-      <p className="text-gray-400 text-center py-12 text-sm">
-        No properties available right now.
-      </p>
+      <div className="py-10 text-center text-gray-500">
+        No properties found.
+      </div>
     );
   }
 
   return (
-    <div className="relative group/container">
-      <EntranceStyles />
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {properties.map((property) => {
+        const growthText =
+          property.growth ||
+          property.returns ||
+          "Investment Opportunity";
 
-      {canScrollLeft && (
-        <button
-          onClick={() => scroll("left")}
-          aria-label="Scroll left"
-          className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all duration-300 opacity-0 group-hover/container:opacity-100 cursor-pointer"
-        >
-          <ChevronIcon dir="left" />
-        </button>
-      )}
+        const highlights = Array.isArray(property.highlights)
+          ? property.highlights.slice(0, 2)
+          : [];
 
-      {canScrollRight && (
-        <button
-          onClick={() => scroll("right")}
-          aria-label="Scroll right"
-          className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all duration-300 opacity-0 group-hover/container:opacity-100 cursor-pointer"
-        >
-          <ChevronIcon dir="right" />
-        </button>
-      )}
-
-      <div
-        ref={scrollRef}
-        className="flex gap-5 pb-6 px-4 sm:px-6 overflow-x-auto scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-      >
-        {properties.map((property, i) => (
-          <SingleCard
+        return (
+          <div
             key={property.id}
-            property={property}
-            navigate={navigate}
-            delay={Math.min(i, 6) * 80}
-          />
-        ))}
-      </div>
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+          >
+            {/* =========================
+                HEADER
+                Image + badges + title
+               ========================= */}
+            <div>
+              {/* Image */}
+              <div className="relative h-56 overflow-hidden">
+                {property.image_url ? (
+                  <img
+                    src={property.image_url}
+                    alt={property.area}
+                    onClick={() => navigate(`/blogs/${encodeURIComponent(property.area)}`)}
+                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 cursor-pointer"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-gray-100 text-sm text-gray-400">
+                    No image available
+                  </div>
+                )}
+
+                {/* Highway badge */}
+                <div className="absolute left-4 top-4 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm">
+                  {property.highway || "NH44"}
+                </div>
+
+                {/* Growth badge */}
+                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-lg bg-emerald-500 px-3 py-2 text-xs font-semibold text-white shadow-sm">
+                  <TrendingUp size={14} />
+                  {growthText}
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="px-5 pt-5">
+                <h3 className="text-xl font-bold capitalize text-gray-900">
+                  {property.area}
+                </h3>
+              </div>
+            </div>
+
+            {/* =========================
+                CONTENT
+                Location + growth + tags
+               ========================= */}
+            <div className="flex min-h-[155px] flex-col px-5 pb-5 pt-3">
+              {/* Location */}
+              <div className="min-h-[44px]">
+                {property.location && (
+                  <div className="flex items-start gap-2 text-sm text-gray-500">
+                    <MapPin
+                      size={16}
+                      className="mt-0.5 shrink-0 text-gray-400"
+                    />
+
+                    <span className="line-clamp-2 leading-6">
+                      {property.location}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Growth */}
+              <div className="mt-3 min-h-[36px]">
+                {property.growth && (
+                  <div className="inline-flex items-center rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-600">
+                    ↗ {property.growth} Growth
+                  </div>
+                )}
+              </div>
+
+              {/* Tags */}
+              <div className="mt-3 flex min-h-[54px] flex-wrap content-start gap-2">
+                {highlights.map((highlight, index) => (
+                  <span
+                    key={index}
+                    className="rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600"
+                  >
+                    {highlight}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* =========================
+                FOOTER
+                Site Visit + View More
+               ========================= */}
+            <div className="mt-auto flex items-center justify-between border-t border-gray-100 px-5 py-4">
+              {/* Site Visit */}
+              <Link
+                to="/connect"
+                className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-md"
+              >
+                Site Visit
+              </Link>
+
+              {/* View More */}
+              <Link
+                to={`/blogs/${encodeURIComponent(property.area)}`}
+                className="group/link flex items-center gap-1.5 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+              >
+                View More
+                <ArrowRight
+                  size={17}
+                  className="transition-transform duration-200 group-hover/link:translate-x-1"
+                />
+              </Link>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
-}
+};
 
 export default PropertyCard;
-

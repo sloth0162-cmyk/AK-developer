@@ -5,6 +5,7 @@ import FullBlog from "../components/FullBlog";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import NavbarTwo from "../components/NavbarTwo";
 
 const supabase = createClient();
 
@@ -60,6 +61,10 @@ function Blogs() {
     return (
       <>
         <Navbar />
+        <div className="m-5 mb-2 p-5">
+
+          <NavbarTwo />
+        </div>
         <p>Loading...</p>
         <Footer />
       </>
@@ -74,6 +79,7 @@ function Blogs() {
       return (
         <>
           <Navbar />
+          <NavbarTwo />
           <p>Blog not found.</p>
           <Footer />
         </>
@@ -83,6 +89,7 @@ function Blogs() {
     return (
       <>
         <Navbar />
+        <NavbarTwo />
         <FullBlog blog={blog} />
         <Footer />
       </>
@@ -103,7 +110,7 @@ function Blogs() {
   return (
     <>
       <Navbar />
-
+      <NavbarTwo />
       {blogs.map((blog) => (
         <BlogCard key={blog.id} blog={blog} />
       ))}
