@@ -1,15 +1,16 @@
 import { BiSearch } from "react-icons/bi";
 import { useState } from "react";
 
-export const Search = ({ onSearch }) => {
+export const Search = ({
+  onSearch,
+  placeholder = "Search properties, areas, blogs or news",
+}) => {
   const [search, setSearch] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Don't block empty searches.
-    // Empty search means "show all blogs".
-    onSearch(search.trim());
+    onSearch?.(search.trim());
   };
 
   return (
@@ -26,7 +27,8 @@ export const Search = ({ onSearch }) => {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search plots or commercial sites in Hyderabad"
+          placeholder={placeholder}
+          aria-label={placeholder}
           className="min-w-0 flex-1 bg-transparent px-4 py-3
                      text-sm text-gray-900 outline-none
                      placeholder:text-gray-400 md:text-base"
@@ -34,6 +36,7 @@ export const Search = ({ onSearch }) => {
 
         <button
           type="submit"
+          aria-label="Search"
           className="mr-1.5 flex h-10 w-10 shrink-0 items-center
                      justify-center rounded-lg bg-blue-600 text-white
                      transition-all duration-200

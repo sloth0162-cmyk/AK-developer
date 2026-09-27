@@ -32,7 +32,7 @@ function excerpt(text, maxLength = 125) {
     : cleanText;
 }
 
-function NewsImage({ src, alt }) {
+function NewsImage({ src, alt, priority = false }) {
   const [fit, setFit] = useState("cover");
   const [failed, setFailed] = useState(false);
 
@@ -64,7 +64,9 @@ function NewsImage({ src, alt }) {
         <img
           src={src}
           alt={alt}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          decoding="async"
           onError={() => setFailed(true)}
           onLoad={(event) => {
             const image = event.currentTarget;
@@ -98,12 +100,14 @@ function SourceBadge({ source }) {
   );
 }
 
-function NewsCard({ news }) {
+function NewsCard({ news, priority = false }) {
   if (!news) return null;
 
   const title = news.title || "Untitled article";
 
-  const date = formatDate(news.published_at || news.collected_at);
+  const date = formatDate(
+    news.published_at || news.collected_at
+  );
 
   const summary = excerpt(news.raw_content, 125);
 
@@ -111,6 +115,7 @@ function NewsCard({ news }) {
     <Link
       to={`/news/${news.id}`}
       className="block h-full"
+      aria-label={`Read ${title}`}
     >
       <article
         className="
@@ -136,6 +141,7 @@ function NewsCard({ news }) {
           <NewsImage
             src={news.image_url}
             alt={title}
+            priority={priority}
           />
         </div>
 
@@ -153,7 +159,7 @@ function NewsCard({ news }) {
           </div>
 
           {/* TITLE */}
-          <h3
+          <h2
             className="
               mb-2
               line-clamp-2
@@ -167,7 +173,7 @@ function NewsCard({ news }) {
             "
           >
             {title}
-          </h3>
+          </h2>
 
           {/* SUMMARY */}
           {summary && (

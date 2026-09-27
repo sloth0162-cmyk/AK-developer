@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import NavbarTwo from "../components/NavbarTwo";
 import Footer from "../components/Footer";
 import SEO from "../components/SEO";
+import { Search } from "../components/Search";
 import { useParams, Link } from "react-router-dom";
 import { ArrowRight, Tag } from "lucide-react";
 
@@ -216,6 +217,10 @@ function Blogs() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // BLOG-ONLY SEARCH
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -250,7 +255,8 @@ function Blogs() {
       }
 
       /*
-        Fallback
+        /blogpage
+        All blogs
       */
       else {
         query = query
@@ -283,6 +289,38 @@ function Blogs() {
       cancelled = true;
     };
   }, [area, id]);
+
+  /* ───────────────────────────────────────────
+     BLOG SEARCH
+  ─────────────────────────────────────────── */
+
+  const handleBlogSearch = (query) => {
+    const value = query.trim().toLowerCase();
+
+    setSearchQuery(query);
+
+    // Empty search = restore original blog list
+    if (!value) {
+      setSearchResults([]);
+      return;
+    }
+
+    // IMPORTANT:
+    // Search ONLY the blog records already loaded.
+    const matches = blogs.filter((blog) => {
+      const title = blog.title?.toLowerCase() || "";
+      const content = cleanText(blog.content).toLowerCase();
+      const blogArea = blog.area?.toLowerCase() || "";
+
+      return (
+        title.includes(value) ||
+        content.includes(value) ||
+        blogArea.includes(value)
+      );
+    });
+
+    setSearchResults(matches);
+  };
 
   /* ───────────────────────────────────────────
      LOADING
@@ -343,9 +381,11 @@ function Blogs() {
           <NavbarTwo />
 
           <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+
             <EmptyState
               message="The blog you are looking for could not be found or is no longer published."
             />
+
           </main>
 
           <Footer />
@@ -401,60 +441,16 @@ function Blogs() {
   }
 
   /* ───────────────────────────────────────────
-     AREA PAGE
-     /blogs/:area
-  ─────────────────────────────────────────── */
-
-  if (blogs.length === 0) {
-    const formattedArea = formatArea(area);
-
-    return (
-      <div className="min-h-screen bg-slate-50">
-
-        <SEO
-          title={
-            formattedArea
-              ? `${formattedArea} Real Estate Blogs | AK Developer`
-              : "Real Estate Blogs | AK Developer"
-          }
-          description={
-            formattedArea
-              ? `Read real estate blogs, property insights, investment information and development updates about ${formattedArea}.`
-              : "Read real estate blogs, property insights and Hyderabad development updates from AK Developer."
-          }
-          url={
-            area
-              ? `https://ak-developer.com/blogs/${encodeURIComponent(area)}`
-              : "https://ak-developer.com/blogpage"
-          }
-        />
-
-        <Navbar />
-        <NavbarTwo />
-
-        <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-
-          <EmptyState
-            message={
-              area
-                ? `There are currently no published blogs for ${formattedArea}.`
-                : "There are currently no published blogs."
-            }
-          />
-
-        </main>
-
-        <Footer />
-
-      </div>
-    );
-  }
-
-  /* ───────────────────────────────────────────
-     AREA BLOG LIST
+     AREA / ALL BLOG LIST
   ─────────────────────────────────────────── */
 
   const formattedArea = formatArea(area);
+
+  const isSearching = searchQuery.trim().length > 0;
+
+  const displayedBlogs = isSearching
+    ? searchResults
+    : blogs;
 
   const pageTitle = formattedArea
     ? `${formattedArea} Blogs`
@@ -486,6 +482,23 @@ function Blogs() {
 
       <main className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8">
 
+        {/* ───────────────────────────────────────────
+            BLOG SEARCH
+        ─────────────────────────────────────────── */}
+
+        <div className="mb-8 flex justify-end">
+          <div className="w-full sm:w-[320px] lg:w-[380px]">
+            <Search
+              onSearch={handleBlogSearch}
+              placeholder="Search blogs, topics or areas"
+            />
+          </div>
+        </div>
+
+        {/* ───────────────────────────────────────────
+            HEADER
+        ─────────────────────────────────────────── */}
+
         <header className="mb-8">
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -497,51 +510,69 @@ function Blogs() {
               </p>
 
               <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                {pageTitle}
+                {isSearching
+                  ? `Search results for "${searchQuery.trim()}"`
+                  : pageTitle}
               </h1>
 
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
-                {pageDescription}
+                {isSearching
+                  ? "Showing results from published AK Developer blogs only."
+                  : pageDescription}
               </p>
 
             </div>
 
             <div className="hidden rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-500 shadow-sm sm:block">
-              {blogs.length}{" "}
-              {blogs.length === 1 ? "article" : "articles"}
+              {displayedBlogs.length}{" "}
+              {displayedBlogs.length === 1
+                ? "article"
+                : "articles"}
             </div>
 
           </div>
 
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[190px_minmax(0,1fr)_190px] xl:grid-cols-[220px_minmax(0,1fr)_220px]">
+        {/* ───────────────────────────────────────────
+            BLOG CONTENT
+        ─────────────────────────────────────────── */}
 
-          <AdSpace />
+        {isSearching && displayedBlogs.length === 0 ? (
+          <div className="mx-auto max-w-2xl">
+            <EmptyState
+              message={`No published blogs matched "${searchQuery.trim()}". Try another topic, area or blog title.`}
+            />
+          </div>
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-[190px_minmax(0,1fr)_190px] xl:grid-cols-[220px_minmax(0,1fr)_220px]">
 
-          <section className="min-w-0">
+            <AdSpace />
 
-            <div className="flex flex-col gap-7">
+            <section className="min-w-0">
 
-              {blogs.map((blog, index) => (
-                <div key={blog.id}>
+              <div className="flex flex-col gap-7">
 
-                  <BlogListCard blog={blog} />
+                {displayedBlogs.map((blog, index) => (
+                  <div key={blog.id}>
 
-                  {(index + 1) % 3 === 0 && (
-                    <MobileAdSpace />
-                  )}
+                    <BlogListCard blog={blog} />
 
-                </div>
-              ))}
+                    {(index + 1) % 3 === 0 && (
+                      <MobileAdSpace />
+                    )}
 
-            </div>
+                  </div>
+                ))}
 
-          </section>
+              </div>
 
-          <AdSpace />
+            </section>
 
-        </div>
+            <AdSpace />
+
+          </div>
+        )}
 
       </main>
 
