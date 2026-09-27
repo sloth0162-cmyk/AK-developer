@@ -21,6 +21,7 @@ import Footer from "../components/Footer";
 import LoadingAnimation from "../components/LoadingAnimation";
 
 import { whatsappLink, callLink } from "../utils/contact";
+import SEO from "../components/SEO";
 
 function About() {
     const trustPoints = [
@@ -52,6 +53,11 @@ function About() {
 
     return (
         <>
+        <SEO
+  title="About AK Developer | Hyderabad Real Estate"
+  description="Learn about AK Developer, our real estate experience in Hyderabad, property expertise, and commitment to helping customers explore residential plots and make informed property decisions."
+  url="https://ak-developer.com/about"
+/>
             <LoadingAnimation />
 
             <Navbar />

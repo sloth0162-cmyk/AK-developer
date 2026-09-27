@@ -10,6 +10,7 @@ import { createClient } from "../lib/client";
 import Navbar from "../components/Navbar";
 import NavbarTwo from "../components/NavbarTwo";
 import Footer from "../components/Footer";
+import SEO from "../components/SEO";
 
 const supabase = createClient()
 
@@ -93,6 +94,11 @@ const PropertyDetails = () => {
   };
 
   return <>
+   <SEO
+      title="Properties in Hyderabad | AK Developer"
+      description="Explore residential plots and real estate properties across Hyderabad with AK Developer. Discover properties based on location, connectivity, growth opportunities, and site visit support."
+      url="https://ak-developer.com/property"
+    />
   <Navbar/>
   <NavbarTwo/>
 

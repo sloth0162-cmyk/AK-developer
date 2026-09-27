@@ -4,6 +4,7 @@ import { createClient } from "../lib/client";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import NavbarTwo from "../components/NavbarTwo";
+import SEO from "../components/SEO";
 
 const supabase = createClient();
 
@@ -157,6 +158,11 @@ function SiteVisit() {
   }
 
   return <>
+  <SEO
+  title="Book a Site Visit | AK Developer Hyderabad"
+  description="Schedule a property site visit with AK Developer in Hyderabad. Explore residential plots, understand the location and surroundings, and contact our team for property details."
+  url="https://ak-developer.com/connect"
+/>
   <Navbar/>
   <NavbarTwo/>
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">

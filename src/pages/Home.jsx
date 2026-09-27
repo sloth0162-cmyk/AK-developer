@@ -6,6 +6,8 @@ import ShowResults from "../components/ShowResults";
 import Footer from "../components/Footer";
 import { Hero } from "../components/Hero";
 import Navbar from "../components/Navbar";
+import SEO from "../components/SEO";
+
 
 
 const supabase = createClient();
@@ -52,6 +54,12 @@ export const Home = () => {
 
   return (
     <>
+     <SEO
+        title="AK Developer | Open Plots in Shadnagar, Hyderabad"
+        description="Discover residential plots and real estate investment opportunities in Shadnagar, Hyderabad. Explore properties and schedule a site visit with AK Developer."
+        url="https://ak-developer.com/"
+      />
+
 
       <Navbar />
 

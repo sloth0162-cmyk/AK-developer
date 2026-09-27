@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import NavbarTwo from "../components/NavbarTwo";
 import NewsCard from "../components/NewsCard";
+import SEO from "../components/SEO";
 
 function News() {
   const [news, setNews] = useState([]);
@@ -41,6 +42,11 @@ function News() {
 
   return (
     <>
+    <SEO
+  title={`${news.title} | AK Developer News`}
+  description={`Read the latest ${news.classifier} news and updates from AK Developer.`}
+  url={`https://ak-developer.com/news/${news.id}`}
+/>
       <Navbar />
       <NavbarTwo />
 

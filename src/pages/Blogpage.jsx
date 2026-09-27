@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NavbarTwo from "../components/NavbarTwo";
 import { Search } from "../components/Search";
+import SEO from "../components/SEO";
 
 const supabase = createClient();
 
@@ -56,6 +57,7 @@ function BlogPage({ onSearch }) {
       const area = blog.area?.toLowerCase() || "";
 
       return (
+      
         title.includes(value) ||
         content.includes(value) ||
         area.includes(value)
@@ -85,7 +87,13 @@ function BlogPage({ onSearch }) {
     (blog) => !searchResults.some((result) => result.id === blog.id)
   );
 
-  return (
+  return <>
+  <SEO
+  title={`${blog.title} | AK Developer`}
+  description={blog.content?.replace(/<[^>]*>/g, "").slice(0, 155)}
+  image={blog.image_url}
+  url={`https://ak-developer.com/blog/${blog.id}`}
+/>
     <div className="min-h-screen bg-slate-50">
       <Navbar />
       <NavbarTwo />
@@ -150,7 +158,8 @@ function BlogPage({ onSearch }) {
 
       <Footer />
     </div>
-  );
+        </>
+
 }
 
 export default BlogPage;

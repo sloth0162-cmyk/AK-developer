@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import NavbarTwo from "../components/NavbarTwo";
 import Footer from "../components/Footer";
+import SEO from "../components/SEO";
 
 function formatDate(value) {
   if (!value) return "";
@@ -62,6 +63,11 @@ function NewsArticle() {
 
   return (
     <>
+    <SEO
+  title={`${news.title} | AK Developer News`}
+  description={`Read the latest ${news.classifier} news and updates from AK Developer.`}
+  url={`https://ak-developer.com/news/${news.id}`}
+/>
       <Navbar />
       <NavbarTwo />
 

@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import NavbarTwo from "../components/NavbarTwo";
+import SEO from "../components/SEO";
 
 const supabase = createClient();
 
