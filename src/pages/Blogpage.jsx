@@ -92,10 +92,15 @@ function BlogListCard({ blog }) {
   return (
     <article className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60">
 
-      <Link
-        to={`/blog/${blog.id}`}
-        className="block overflow-hidden bg-slate-100"
-      >
+       <Link
+  to={`/blog/${blog.title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")}`}
+  className="block overflow-hidden bg-slate-100"
+>
         {blog.image_url ? (
           <img
             src={blog.image_url}

@@ -10,8 +10,20 @@ import SEO from "../components/SEO";
 
 const supabase = createClient();
 
+const slugify = (title) =>
+  title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+
 function Blogs() {
-  const { area, id } = useParams();
+  const params = useParams();
+
+  // Works with either /blog/:id or /blog/:slug
+  const area = params.area;
+  const slug = params.slug || params.id;
 
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,18 +32,36 @@ function Blogs() {
     async function fetchBlogs() {
       setLoading(true);
 
+      // Single blog: /blog/:slug
+      if (slug) {
+        const { data, error } = await supabase
+          .from("blog")
+          .select("*")
+          .eq("published", true);
+
+        if (error) {
+          console.error("Error fetching blog:", error);
+          setBlogs([]);
+          setLoading(false);
+          return;
+        }
+
+        const blog = (data || []).find(
+          (item) => slugify(item.title) === slug
+        );
+
+        setBlogs(blog ? [blog] : []);
+        setLoading(false);
+        return;
+      }
+
+      // Area blogs: /blogs/:area
       let query = supabase
         .from("blog")
         .select("*")
         .eq("published", true);
 
-      // /blog/:id
-      if (id) {
-        query = query.eq("id", id).single();
-      }
-
-      // /blogs/:area
-      else if (area) {
+      if (area) {
         query = query
           .eq("area", area)
           .order("created_at", { ascending: false });
@@ -46,34 +76,31 @@ function Blogs() {
         return;
       }
 
-      if (id) {
-        setBlogs(data ? [data] : []);
-      } else {
-        setBlogs(data || []);
-      }
-
+      setBlogs(data || []);
       setLoading(false);
     }
 
     fetchBlogs();
-  }, [area, id]);
+  }, [area, slug]);
 
   if (loading) {
     return (
       <>
         <Navbar />
-        <div className="m-5 mb-2 p-5">
 
+        <div className="m-5 mb-2 p-5">
           <NavbarTwo />
         </div>
+
         <p>Loading...</p>
+
         <Footer />
       </>
     );
   }
 
-  // /blog/:id
-  if (id) {
+  // /blog/:slug
+  if (slug) {
     const blog = blogs[0];
 
     if (!blog) {
@@ -81,7 +108,9 @@ function Blogs() {
         <>
           <Navbar />
           <NavbarTwo />
+
           <p>Blog not found.</p>
+
           <Footer />
         </>
       );
@@ -91,7 +120,15 @@ function Blogs() {
       <>
         <Navbar />
         <NavbarTwo />
+
+        <SEO
+          title={blog.title}
+          description={blog.content?.slice(0, 160)}
+          image={blog.image_url}
+        />
+
         <FullBlog blog={blog} />
+
         <Footer />
       </>
     );
@@ -102,7 +139,9 @@ function Blogs() {
     return (
       <>
         <Navbar />
+
         <p>No blogs found in this area.</p>
+
         <Footer />
       </>
     );
@@ -112,6 +151,7 @@ function Blogs() {
     <>
       <Navbar />
       <NavbarTwo />
+
       {blogs.map((blog) => (
         <BlogCard key={blog.id} blog={blog} />
       ))}

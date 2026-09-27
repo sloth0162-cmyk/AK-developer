@@ -3,15 +3,7 @@ import { ArrowRight, Clock, Tag } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 
-/**
- * BlogCard
- * Responsive by default:
- *  - Mobile: stacked layout
- *  - Desktop: horizontal layout
- *
- * Usage:
- *   <BlogCard blog={blog} />
- */
+
 function BlogCard({ blog }) {
   return (
     <article
@@ -23,10 +15,15 @@ function BlogCard({ blog }) {
                  p-8 lg:mr-40 lg:ml-40 lg:mt-5"
     >
       {/* Image */}
-      <Link
-        to={`/blog/${blog.id}`}
-        className="block overflow-hidden lg:w-2/5 lg:shrink-0"
-      >
+    <Link
+  to={`/blog/${blog.title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")}`}
+  className="block overflow-hidden lg:w-2/5 lg:shrink-0"
+>
         <div className="h-60 w-full overflow-hidden lg:h-full">
           {blog.image_url && (
             <img

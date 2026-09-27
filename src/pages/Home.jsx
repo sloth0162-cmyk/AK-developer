@@ -17,31 +17,160 @@ export const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searching, setSearching] = useState(false);
 
-  const handleSearch = async (query) => {
-    setSearchQuery(query);
-    setSearching(true);
+const handleSearch = async (query) => {
+  const value = query.trim().toLowerCase();
 
-    const lowerQuery = query.toLowerCase();
+  setSearchQuery(query);
 
-    const { data, error } = await supabase
-      .from("blog")
-      .select("*")
-      .eq("published", true)
-      .or(
-        `title.ilike.%${lowerQuery}%,area.ilike.%${lowerQuery}%,content.ilike.%${lowerQuery}%`
-      );
+  // Empty search
+  if (!value) {
+    setSearchResults([]);
+    setSearching(false);
+    return;
+  }
 
-    if (error) {
-      console.error("Search error:", error);
-      setSearchResults([]);
-      setSearching(false);
-      return;
+  setSearching(true);
+
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+
+    // Fetch news from Flask API
+    const newsPromise = apiUrl
+      ? fetch(`${apiUrl}/api/news?limit=50`)
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error(`News API failed: ${response.status}`);
+            }
+
+            const payload = await response.json();
+
+            return Array.isArray(payload)
+              ? payload
+              : payload.data || [];
+          })
+          .catch((error) => {
+            console.error("News search error:", error);
+            return [];
+          })
+      : Promise.resolve([]);
+
+    // Fetch property + blog + news together
+    const [
+      { data: properties, error: propertyError },
+      { data: blogs, error: blogError },
+      news,
+    ] = await Promise.all([
+      // PROPERTY
+      supabase
+        .from("data")
+        .select("*"),
+
+      // BLOG
+      supabase
+        .from("blog")
+        .select("*")
+        .eq("published", true),
+
+      // NEWS
+      newsPromise,
+    ]);
+
+    if (propertyError) {
+      console.error("Property search error:", propertyError);
     }
 
-    setSearchResults(data || []);
-    setSearching(false);
+    if (blogError) {
+      console.error("Blog search error:", blogError);
+    }
 
-    // Move screen below Hero
+    // -----------------------------------------
+    // PROPERTY SEARCH
+    // Searches the whole property object.
+    // So name, area, tags, relational_tags,
+    // highlights, location, highway, summary, etc.
+    // can all produce a match.
+    // -----------------------------------------
+
+    const propertyResults = (properties || [])
+      .filter((property) => {
+        const searchableText = Object.values(property)
+          .map((value) => {
+            if (value === null || value === undefined) {
+              return "";
+            }
+
+            if (Array.isArray(value)) {
+              return value.join(" ");
+            }
+
+            if (typeof value === "object") {
+              return JSON.stringify(value);
+            }
+
+            return String(value);
+          })
+          .join(" ")
+          .toLowerCase();
+
+        return searchableText.includes(value);
+      })
+      .map((property) => ({
+        ...property,
+        type: "property",
+      }));
+
+    // -----------------------------------------
+    // BLOG SEARCH
+    // -----------------------------------------
+
+    const blogResults = (blogs || [])
+      .filter((blog) => {
+        const title = String(blog.title || "").toLowerCase();
+        const area = String(blog.area || "").toLowerCase();
+        const content = String(blog.content || "").toLowerCase();
+
+        return (
+          title.includes(value) ||
+          area.includes(value) ||
+          content.includes(value)
+        );
+      })
+      .map((blog) => ({
+        ...blog,
+        type: "blog",
+      }));
+
+    // -----------------------------------------
+    // NEWS SEARCH
+    // Only title + classifier
+    // -----------------------------------------
+
+    const newsResults = (news || [])
+      .filter((article) => {
+        const title = String(article.title || "").toLowerCase();
+        const classifier = String(article.classifier || "").toLowerCase();
+
+        return (
+          title.includes(value) ||
+          classifier.includes(value)
+        );
+      })
+      .map((article) => ({
+        ...article,
+        type: "news",
+      }));
+
+    // -----------------------------------------
+    // COMBINE
+    // -----------------------------------------
+
+    setSearchResults([
+      ...propertyResults,
+      ...newsResults,
+      ...blogResults,
+    ]);
+
+    // Scroll to search results
     setTimeout(() => {
       document
         .getElementById("search-results")
@@ -50,7 +179,14 @@ export const Home = () => {
           block: "start",
         });
     }, 100);
-  };
+
+  } catch (error) {
+    console.error("Global search error:", error);
+    setSearchResults([]);
+  } finally {
+    setSearching(false);
+  }
+};
 
   return (
     <>
