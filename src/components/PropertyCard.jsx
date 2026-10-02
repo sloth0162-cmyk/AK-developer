@@ -30,18 +30,18 @@ const PropertyCard = () => {
     fetchProperties();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {[1, 2, 3, 4].map((item) => (
-          <div
-            key={item}
-            className="h-[520px] animate-pulse rounded-2xl bg-gray-100"
-          />
-        ))}
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <div className="grid grid-cols-1 gap-5 px-4 sm:grid-cols-2 sm:px-0 lg:grid-cols-4">
+      {[1, 2, 3, 4].map((item) => (
+        <div
+          key={item}
+          className="h-[520px] animate-pulse rounded-2xl bg-gray-100"
+        />
+      ))}
+    </div>
+  );
+}
 
   if (properties.length === 0) {
     return (
@@ -52,7 +52,7 @@ const PropertyCard = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-5 px-4 sm:grid-cols-2 sm:px-0 lg:grid-cols-4">
       {properties.map((property) => {
         const growthText =
           property.growth ||

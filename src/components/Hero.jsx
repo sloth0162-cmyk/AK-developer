@@ -122,7 +122,7 @@ export const Hero = () => {
           size="lg"
           variant="outline"
           className="h-11 border-gray-300 bg-white/90 px-6 text-gray-950 shadow-sm hover:bg-white"
-          onClick={() => navigate("/sitevisit")}
+          onClick={() => navigate("/connect")}
         >
           Book a Site Visit
         </Button>
