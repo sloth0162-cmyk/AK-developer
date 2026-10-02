@@ -252,16 +252,16 @@ function Navbar() {
             >
                 <nav className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 lg:px-8 py-2 md:py-3">
                     {/* Logo */}
-                    <div
-                        className="cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
-                        onClick={() => navigate("/")}
-                    >
-                        <img
-                            src={AK}
-                            alt="AK Developer Logo"
-                            className="w-28 md:w-32 lg:w-36 xl:w-40 object-contain"
-                        />
-                    </div>
+                 <div
+    className="cursor-pointer transition-transform duration-350 hover:scale-95 active:scale-65"
+    onClick={() => navigate("/")}
+>
+    <img
+        src={AK}
+        alt="AK Developer Logo"
+        className="w-20 md:w-24 lg:w-24 rounded-3xl object-contain"
+    />
+</div>
 
                     {/* Links */}
                     <ul className="flex items-center gap-5 md:gap-6 lg:gap-8">
@@ -310,13 +310,13 @@ function Navbar() {
                         className="absolute left-1/2 -translate-x-1/2 cursor-pointer"
                         onClick={() => navigate("/")}
                     >
-                        <div className="h-10 sm:h-12 flex items-center justify-center overflow-hidden">
-                            <img
-                                src={AK}
-                                alt="AK Developer Logo"
-                                className="h-full w-auto object-contain scale-125 sm:scale-130"
-                            />
-                        </div>
+                        <div className="h-10 sm:h-12 w-24 sm:w-28 flex items-center justify-center rounded-xl overflow-hidden">
+    <img
+        src={AK}
+        alt="AK Developer Logo"
+        className="w-full h-full object-contain"
+    />
+</div>
                     </div>
 
                     <div className="relative flex items-center" ref={mobileProfileRef}>
